@@ -4,6 +4,13 @@ const Markdown = require('../../src/with-html')
 const Editor = require('./editor')
 const CodeBlock = require('./code-block')
 const MarkdownControls = require('./markdown-controls')
+const behead = require('remark-behead')
+const remarkCaption = require('remark-captions')
+const figure = require('./figure')
+const figcaption = require('./figcaption')
+const section = require('./section')
+const linkifyRegex = require('remark-linkify-regex');
+const sectionize = require('remark-sectionize');
 
 const initialSource = `
 # Live demo
@@ -15,13 +22,13 @@ Changes are automatically rendered as you type.
 * Allows you to escape or skip HTML (try toggling the checkboxes above)
 * If you escape or skip the HTML, no \`dangerouslySetInnerHTML\` is used! Yay!
 
-## HTML block below
+# HTML block below
 
 <blockquote>
   This blockquote will change based on the HTML settings above.
 </blockquote>
 
-## How about some code?
+# How about some code?
 \`\`\`js
 var React = require('react');
 var Markdown = require('react-markdown');
@@ -34,13 +41,26 @@ React.render(
 
 Pretty neat, eh?
 
-## Tables?
+# Tables?
 
 | Feature   | Support |
 | --------- | ------- |
 | tables    | ✔ |
 | alignment | ✔ |
 | wewt      | ✔ |
+
+# Links
+
+This is my friend: @6ilZq3kN0F
+
+This is redundantly linked: [@6ilZq3kN0F](@6ilZq3kN0F)
+
+cc [@alreadyLinked](@2RNGJafZt)
+
+# Caption
+> I am not made of SPAM
+Source: Frank Spam
+
 
 ## More info?
 
@@ -61,6 +81,7 @@ class Demo extends React.PureComponent {
       markdownSrc: initialSource,
       htmlMode: 'raw'
     }
+    this.linkify = linkifyRegex(/\@[A-Za-z0-9]+\b/);
   }
 
   handleMarkdownChange(evt) {
@@ -86,7 +107,8 @@ class Demo extends React.PureComponent {
             source={this.state.markdownSrc}
             skipHtml={this.state.htmlMode === 'skip'}
             escapeHtml={this.state.htmlMode === 'escape'}
-            renderers={{code: CodeBlock}}
+            renderers={{code: CodeBlock, section, figure, figcaption }}
+            plugins={[[behead, { after: 0, depth: 2 }],sectionize,remarkCaption,this.linkify]}
           />
         </div>
       </div>
