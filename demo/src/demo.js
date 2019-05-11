@@ -87,7 +87,7 @@ class Demo extends React.PureComponent {
       markdownSrc: initialSource,
       htmlMode: 'raw'
     }
-    this.linkify = linkifyRegex(/\@[A-Za-z0-9]+\b/);
+    this.linkify = linkifyRegex(/@[A-Za-z0-9]+\b/);
   }
 
   handleMarkdownChange(evt) {

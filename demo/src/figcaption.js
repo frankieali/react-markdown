@@ -1,3 +1,14 @@
 const React = require('react')
+const PropTypes = require('prop-types')
 
-module.exports = (props) => <figcaption>{props.children}</figcaption>
+const Figcaption = (props) => <figcaption>{props.children}</figcaption>
+
+Figcaption.defaultProps = {
+  children: []
+}
+
+Figcaption.propTypes = {
+  children: PropTypes.array.isRequired,
+}
+
+module.exports = Figcaption
