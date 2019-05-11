@@ -11,11 +11,14 @@ const figcaption = require('./figcaption')
 const section = require('./section')
 const linkifyRegex = require('remark-linkify-regex');
 const sectionize = require('remark-sectionize');
+const toc = require('remark-toc');
 
 const initialSource = `
 # Live demo
 
 Changes are automatically rendered as you type.
+
+## Table of Contents
 
 * Implements [GitHub Flavored Markdown](https://github.github.com/gfm/)
 * Renders actual, "native" React DOM elements
@@ -114,7 +117,7 @@ class Demo extends React.PureComponent {
             skipHtml={this.state.htmlMode === 'skip'}
             escapeHtml={this.state.htmlMode === 'escape'}
             renderers={{code: CodeBlock, section, figure, figcaption }}
-            plugins={[[behead, { after: 0, depth: 2 }],sectionize,remarkCaption,this.linkify]}
+            plugins={[[behead, { after: 0, depth: 2 }],toc,sectionize,remarkCaption,this.linkify]}
           />
         </div>
       </div>
