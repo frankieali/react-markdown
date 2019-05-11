@@ -48,6 +48,7 @@ Pretty neat, eh?
 | tables    | ✔ |
 | alignment | ✔ |
 | wewt      | ✔ |
+Table: Table Caption
 
 # Links
 
@@ -57,9 +58,14 @@ This is redundantly linked: [@6ilZq3kN0F](@6ilZq3kN0F)
 
 cc [@alreadyLinked](@2RNGJafZt)
 
-# Caption
-> I am not made of SPAM
+
+# Captions
+
+> I don't think I'm made of SPAM. What would be a sign that I was?
 Source: Frank Spam
+
+![Markdown Logo](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
+Figure: Markdown Logo
 
 
 ## More info?
