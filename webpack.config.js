@@ -8,6 +8,7 @@ const prod = process.env.NODE_ENV === 'production'
 
 module.exports = {
   mode: prod ? 'production' : 'development',
+  devtool: prod ? 'source-map' : 'inline-source-map',
   entry: [path.join(__dirname, 'src', 'react-markdown.js')],
   output: {
     library: 'ReactMarkdown',

@@ -159,6 +159,8 @@ function getNodeProps(node, key, opts, renderer, parent, index) {
     case 'tableCell':
       assignDefined(props, {
         isHeader: parent.props.isHeader,
+        colspan: node.colspan,
+        isEmpty: node.empty,
         align: parent.props.columnAlignment[index]
       })
       break

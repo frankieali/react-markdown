@@ -1,18 +1,11 @@
-const React = require('react')
-const ReactDOM = require('react-dom')
-const Markdown = require('../../src/with-html')
-const Editor = require('./editor')
-const CodeBlock = require('./code-block')
-const MarkdownControls = require('./markdown-controls')
-const behead = require('remark-behead')
-const remarkCaption = require('remark-captions')
-const figure = require('./figure')
-const figcaption = require('./figcaption')
-const section = require('./section')
+const remark = require('remark');
+const html = require('remark-html');
+const report = require('vfile-reporter');
 const linkifyRegex = require('remark-linkify-regex');
+const remarkCaption = require('remark-captions')
 const sectionize = require('remark-sectionize');
 const toc = require('remark-toc');
-const gemojiToEmoji = require('remark-gemoji-to-emoji');
+const multimdTable = require('../../src/plugins/remark-multimd-table');
 const tableParser = require('../../src/plugins/tableParser');
 const tableHandler = require('../../src/plugins/tableHandler');
 
@@ -23,6 +16,8 @@ Changes are automatically rendered as you type.
 
 ## Table of Contents
 
+
+# Features
 * Implements [GitHub Flavored Markdown](https://github.github.com/gfm/)
 * Renders actual, "native" React DOM elements
 * Allows you to escape or skip HTML (try toggling the checkboxes above)
@@ -122,7 +117,6 @@ And more      | With an escaped '\\|' \\*test\\*       ||
 ## One Line Table
 | Skill | Points |  \n|-|-|  \n| Sword | 3 |  \n| Dagger | 4 |  \n| Spear | 2 |
 
-
 # Links
 
 This is my friend: @6ilZq3kN0F
@@ -130,9 +124,6 @@ This is my friend: @6ilZq3kN0F
 This is redundantly linked: [@6ilZq3kN0F](@6ilZq3kN0F)
 
 cc [@alreadyLinked](@2RNGJafZt)
-
-# gemoji-to-emoji
-These are some emojis: :smile: :+1:
 
 
 # Captions
@@ -173,53 +164,14 @@ const specialTable = String.raw`
 | \f | Form Feed | "Form Feed: \f" |
 `;
 
-class Demo extends React.PureComponent {
-  constructor(props) {
-    super(props)
-
-    this.handleControlsChange = this.handleControlsChange.bind(this)
-    this.handleMarkdownChange = this.handleMarkdownChange.bind(this)
-    this.state = {
-      markdownSrc: initialSource,
-      htmlMode: 'raw'
-    }
-    this.linkify = linkifyRegex(/@[A-Za-z0-9]+\b/);
-  }
-
-  handleMarkdownChange(evt) {
-    this.setState({markdownSrc: evt.target.value})
-  }
-
-  handleControlsChange(mode) {
-    this.setState({htmlMode: mode})
-  }
-
-  render() {
-    return (
-      <div className="demo">
-        <div className="editor-pane">
-          <MarkdownControls onChange={this.handleControlsChange} mode={this.state.htmlMode} />
-
-          <Editor value={this.state.markdownSrc} onChange={this.handleMarkdownChange} />
-        </div>
-
-        <div className="result-pane">
-          <Markdown
-            className="result"
-            source={this.state.markdownSrc}
-            skipHtml={this.state.htmlMode === 'skip'}
-            escapeHtml={this.state.htmlMode === 'escape'}
-            renderers={{code: CodeBlock, section, figure, figcaption }}
-            plugins={[[behead, { after: 0, depth: 2 }],toc,sectionize,remarkCaption,this.linkify,gemojiToEmoji]}
-          />
-        </div>
-      </div>
-    )
-  }
-}
-
-if (typeof window !== 'undefined') {
-  ReactDOM.render(<Demo />, document.getElementById('main'))
-}
-
-module.exports = Demo
+remark()
+  .use(toc)
+  // .use(sectionize)
+  .use(remarkCaption)
+  .use(tableParser)
+  .use(html, {handlers: {table: tableHandler}})
+  .process(initialSource + specialTable, function(err, file) {
+    console.error(report(err || file))
+    //console.log(String(file))
+    document.getElementById("main").innerHTML = String(file);
+  })

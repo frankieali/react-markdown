@@ -7,7 +7,7 @@ const prod = process.env.NODE_ENV === 'production'
 
 const config = {
   mode: prod ? 'production' : 'development',
-  devtool: prod ? false : 'eval',
+  devtool: prod ? 'source-map' : 'inline-source-map',
 
   entry: [path.join(__dirname, 'demo', 'src', 'demo.js')],
 
@@ -45,7 +45,13 @@ const config = {
     ]
   },
 
-  plugins: []
+  plugins: [],
+
+  devServer: {
+    contentBase: path.join(__dirname, '/demo/dist'),
+    port: 8080,
+    watchContentBase: true
+  }
 }
 
 if (prod) {

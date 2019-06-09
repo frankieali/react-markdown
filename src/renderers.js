@@ -56,12 +56,17 @@ function SimpleRenderer(tag, props) {
 
 function TableCell(props) {
   const style = props.align ? {textAlign: props.align} : undefined
+  const colspan = props.colspan ? {colSpan: props.colspan} : undefined
   const coreProps = getCoreProps(props)
-  return createElement(
-    props.isHeader ? 'th' : 'td',
-    style ? xtend({style}, coreProps) : coreProps,
-    props.children
-  )
+  if(!props.isEmpty) {
+    return createElement(
+      props.isHeader ? 'th' : 'td',
+      xtend({style}, colspan, coreProps),
+      props.children
+    )
+  } else {
+    return null
+  }
 }
 
 function Heading(props) {
